@@ -30,7 +30,7 @@ const ChatPage = () => {
 
     try {
       const res = await axios.post(
-        `https://instagramclone-ee2r.onrender.com/api/v1/message/send/${receiverId}`,
+        `http://localhost:8000/api/v1/message/send/${receiverId}`,
         { textMessage },
         { withCredentials: true }
       );

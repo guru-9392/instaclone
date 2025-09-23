@@ -1,46 +1,28 @@
 import { Server } from "socket.io";
+import http from "http";
+import express from "express";
 
-let io;
-export const onlineUsers = {}; // userId -> [socketId1, socketId2]
+const app = express();
+const server = http.createServer(app);
 
-export const initSocket = (server) => {
-  io = new Server(server, {
-    cors: {
-      origin: process.env.URL,
-      methods: ["GET", "POST"],
-      credentials: true,
-    },
-    transports: ["websocket", "polling"],
+const io = new Server(server, {
+  cors: { origin: process.env.URL || "*", methods: ["GET", "POST"] },
+});
+
+const userSocketMap = {}; // userId -> socketId
+
+export const getReceiverSocketId = (receiverId) => userSocketMap[receiverId];
+
+io.on("connection", (socket) => {
+  const userId = socket.handshake.query.userId;
+  if (userId) userSocketMap[userId] = socket.id;
+
+  io.emit("getOnlineUsers", Object.keys(userSocketMap));
+
+  socket.on("disconnect", () => {
+    if (userId) delete userSocketMap[userId];
+    io.emit("getOnlineUsers", Object.keys(userSocketMap));
   });
+});
 
-  io.on("connection", (socket) => {
-    const userId = socket.handshake.query.userId;
-    if (userId) {
-      if (!onlineUsers[userId]) onlineUsers[userId] = [];
-      onlineUsers[userId].push(socket.id);
-      console.log(`✅ User connected: ${userId}`);
-    }
-
-    socket.on("sendMessage", ({ senderId, receiverId, text }) => {
-      const receiverSockets = onlineUsers[receiverId] || [];
-      receiverSockets.forEach((socketId) => {
-        io.to(socketId).emit("newMessage", { senderId, text });
-      });
-    });
-
-    socket.on("disconnect", () => {
-      if (userId) {
-        onlineUsers[userId] = onlineUsers[userId].filter(
-          (id) => id !== socket.id
-        );
-        if (onlineUsers[userId].length === 0) delete onlineUsers[userId];
-      }
-      console.log(`❌ User disconnected: ${userId}`);
-    });
-  });
-
-  return io;
-};
-
-export const getReceiverSocketIds = (userId) => onlineUsers[userId] || [];
-export { io };
+export { app, server, io };
