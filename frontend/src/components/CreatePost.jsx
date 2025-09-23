@@ -37,7 +37,7 @@ const CreatePost = ({ open, setOpen }) => {
     try {
       setLoading(true);
       const res = await axios.post(
-        'http://localhost:8000/api/v1/post/create', // ✅ FIXED ENDPOINT
+        'https://instagramclone-ee2r.onrender.com/api/v1/post/create', // ✅ FIXED ENDPOINT
         formData,
         {
           headers: { 'Content-Type': 'multipart/form-data' },

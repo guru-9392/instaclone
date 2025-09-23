@@ -6,7 +6,7 @@ export const onlineUsers = {};
 export const initSocket = (server) => {
   io = new Server(server, {
     cors: {
-      origin: "http://localhost:5173", // your frontend URL
+      origin: process.env.URL, // your frontend URL
       methods: ["GET", "POST"],
       credentials: true,
     },

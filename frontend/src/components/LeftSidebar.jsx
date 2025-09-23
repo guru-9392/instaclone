@@ -24,7 +24,7 @@ const LeftSidebar = () => {
     if (!user?._id) return;
 
     if (!socket) {
-      socket = io("http://localhost:8000", {
+      socket = io("https://instagramclone-ee2r.onrender.com", {
         query: { userId: user._id },
         reconnection: true,
       });

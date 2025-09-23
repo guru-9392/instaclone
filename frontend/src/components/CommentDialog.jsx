@@ -38,7 +38,7 @@ const CommentDialog = ({ open, setOpen }) => {
 
     try {
       const res = await axios.post(
-        `http://localhost:8000/api/v1/post/${selectedPost._id}/comment`,
+        `https://instagramclone-ee2r.onrender.com/api/v1/post/${selectedPost._id}/comment`,
         { text: commentText.trim() },
         { headers: { 'Content-Type': 'application/json' }, withCredentials: true }
       );

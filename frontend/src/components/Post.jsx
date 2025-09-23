@@ -37,7 +37,7 @@ const Post = ({ post }) => {
         try {
             const action = liked ? 'dislike' : 'like';
             const res = await axios.get(
-                `http://localhost:8000/api/v1/post/${post._id}/${action}`,
+                `https://instagramclone-ee2r.onrender.com/api/v1/post/${post._id}/${action}`,
                 { withCredentials: true }
             );
             if (res.data.success) {
@@ -65,7 +65,7 @@ const Post = ({ post }) => {
         if (!post._id || !text.trim()) return;
         try {
             const res = await axios.post(
-                `http://localhost:8000/api/v1/post/${post._id}/comment`,
+                `https://instagramclone-ee2r.onrender.com/api/v1/post/${post._id}/comment`,
                 { text: text.trim() },
                 { headers: { 'Content-Type': 'application/json' }, withCredentials: true }
             );
@@ -90,7 +90,7 @@ const Post = ({ post }) => {
         if (!post._id) return;
         try {
             const res = await axios.get(
-                `http://localhost:8000/api/v1/post/${post._id}/bookmark`,
+                `https://instagramclone-ee2r.onrender.com/api/v1/post/${post._id}/bookmark`,
                 { withCredentials: true }
             );
             if (res.data.success) {
@@ -118,7 +118,7 @@ const Post = ({ post }) => {
         if (!author._id || !currentUser?._id) return;
         try {
             const res = await axios.post(
-                `http://localhost:8000/api/v1/user/followorunfollow/${author._id}`,
+                `https://instagramclone-ee2r.onrender.com/api/v1/user/followorunfollow/${author._id}`,
                 {},
                 { withCredentials: true }
             );
@@ -153,7 +153,7 @@ const Post = ({ post }) => {
         if (!post._id) return;
         try {
             const res = await axios.delete(
-                `http://localhost:8000/api/v1/post/delete/${post._id}`,
+                `https://instagramclone-ee2r.onrender.com/api/v1/post/delete/${post._id}`,
                 { withCredentials: true }
             );
             if (res.data.success) {
