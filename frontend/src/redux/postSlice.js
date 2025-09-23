@@ -6,7 +6,7 @@ export const fetchPosts = createAsyncThunk(
   "post/fetchPosts",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await axios.get("http://localhost:8000/api/v1/post/all", { withCredentials: true });
+      const res = await axios.get("https://instagramclone-ee2r.onrender.com/api/v1/post/all", { withCredentials: true });
       if (res.data.success) return res.data.posts;
       return rejectWithValue("Failed to fetch posts");
     } catch (error) {
