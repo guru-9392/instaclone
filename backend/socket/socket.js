@@ -1,34 +1,40 @@
 import { Server } from "socket.io";
 
 let io;
-export const onlineUsers = {};
+export const onlineUsers = {}; // userId -> [socketId1, socketId2]
 
 export const initSocket = (server) => {
   io = new Server(server, {
     cors: {
-      origin: process.env.URL, // your frontend URL
+      origin: process.env.URL,
       methods: ["GET", "POST"],
       credentials: true,
     },
-    transports: ["websocket", "polling"], // support WebSocket and fallback
+    transports: ["websocket", "polling"],
   });
 
   io.on("connection", (socket) => {
     const userId = socket.handshake.query.userId;
     if (userId) {
-      onlineUsers[userId] = socket.id;
+      if (!onlineUsers[userId]) onlineUsers[userId] = [];
+      onlineUsers[userId].push(socket.id);
       console.log(`✅ User connected: ${userId}`);
     }
 
-    socket.on("sendMessage", (message) => {
-      const receiverSocketId = onlineUsers[message.receiverId];
-      if (receiverSocketId) {
-        io.to(receiverSocketId).emit("newMessage", message);
-      }
+    socket.on("sendMessage", ({ senderId, receiverId, text }) => {
+      const receiverSockets = onlineUsers[receiverId] || [];
+      receiverSockets.forEach((socketId) => {
+        io.to(socketId).emit("newMessage", { senderId, text });
+      });
     });
 
     socket.on("disconnect", () => {
-      if (userId) delete onlineUsers[userId];
+      if (userId) {
+        onlineUsers[userId] = onlineUsers[userId].filter(
+          (id) => id !== socket.id
+        );
+        if (onlineUsers[userId].length === 0) delete onlineUsers[userId];
+      }
       console.log(`❌ User disconnected: ${userId}`);
     });
   });
@@ -36,5 +42,5 @@ export const initSocket = (server) => {
   return io;
 };
 
-export const getReceiverSocketId = (userId) => onlineUsers[userId];
+export const getReceiverSocketIds = (userId) => onlineUsers[userId] || [];
 export { io };
