@@ -38,7 +38,7 @@ function App() {
   useEffect(() => {
     if (!user) return;
 
-    socketRef.current = io('http://localhost:8000', {
+    socketRef.current = io('https://instagramclone-ee2r.onrender.com', {
       query: { userId: user._id },
       transports: ['websocket'],
     });

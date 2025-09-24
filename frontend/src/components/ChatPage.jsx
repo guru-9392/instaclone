@@ -16,7 +16,7 @@ const ChatPage = () => {
   const [textMessage, setTextMessage] = useState("");
 
   useEffect(() => {
-    socket = io("http://localhost:8000", { query: { userId: user?._id } });
+    socket = io("https://instagramclone-ee2r.onrender.com", { query: { userId: user?._id } });
 
     socket.on("newMessage", (message) => {
       dispatch(addMessage(message));
@@ -30,7 +30,7 @@ const ChatPage = () => {
 
     try {
       const res = await axios.post(
-        `http://localhost:8000/api/v1/message/send/${receiverId}`,
+        `https://instagramclone-ee2r.onrender.com/api/v1/message/send/${receiverId}`,
         { textMessage },
         { withCredentials: true }
       );
