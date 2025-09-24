@@ -10,7 +10,7 @@ import CreatePost from './CreatePost';
 import { setPosts, setSelectedPost } from '@/redux/postSlice';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { Button } from './ui/button';
-import { setLikeNotification } from '@/redux/realTimeNotificationSlice'; // your RTN slice
+
 
 const LeftSidebar = () => {
     const navigate = useNavigate();
